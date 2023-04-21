@@ -27,5 +27,11 @@ namespace TeleBirr
         {
             return DateTime.Now.Ticks.ToString();
         }
+
+        public static string CreateMerchantOrderId()
+        {
+            var orderNo = Random.Shared.Next(100, 100000).ToString();
+            return orderNo;
+        }
     }
 }
