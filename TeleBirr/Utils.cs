@@ -28,9 +28,14 @@ namespace TeleBirr
             return DateTime.Now.Ticks.ToString();
         }
 
+        /// <summary>
+        /// Returns Randomized Merchant Order Id
+        /// </summary>
+        /// <returns></returns>
         public static string CreateMerchantOrderId()
         {
-            var orderNo = Random.Shared.Next(100, 100000).ToString();
+            //var orderNo = Random.Shared.Next(100, 100000).ToString();
+            var orderNo = DateTime.Now.Ticks.ToString();
             return orderNo;
         }
     }
