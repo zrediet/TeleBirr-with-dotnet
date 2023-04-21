@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace TeleBirr
 {
@@ -24,19 +25,7 @@ namespace TeleBirr
         public static string? _out_trade_no;
         public static string? _api = "http://196.188.120.3:10443/service-openup/toTradeWebPay";
 
-        public teleBirr(
-            string app_id,
-            string app_key,
-            string public_key,
-            string notify_url,
-            string receiver_name,
-            string return_url,
-            string short_code,
-            string subject,
-            string timeout_express,
-            string total_amount,
-            string nonce,
-            string out_trade_no,
+        public teleBirr(string app_id, string app_key, string public_key, string notify_url, string receiver_name, string return_url, string short_code, string subject, string timeout_express, string total_amount, string nonce, string out_trade_no,
             string api = "http://196.188.120.3:10443/service-openup/toTradeWebPay")
         {
             _api = api;
@@ -100,6 +89,14 @@ namespace TeleBirr
                 }
             };
         }
+
+        //Required Methods
+        // Encrypt_Ussd(string, ussd, string public_key)
+        // Encrypt(string public_key, string msg)
+        // Sign (string ussd, string app_key)
+        // Request_Params()
+        // Send_Request()
+        // Decrypt(string public_key, string payload)
 
 
 
