@@ -25,5 +25,11 @@ namespace TeleBirr
             _url = url;
         }
          
+
+        //Required methods
+        // Apply_Fabric_Token()
+        // Request_Create_Order()
+        // QueryOrder()
+        // Sign()
     }
 }
