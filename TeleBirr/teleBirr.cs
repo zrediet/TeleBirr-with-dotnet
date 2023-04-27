@@ -11,9 +11,12 @@ namespace TeleBirr
 
     public class teleBirr
     {
-        public static string? _app_id;
-        public static string? _app_key;
-        public static string? _public_key;
+        public static string? _app_id; //d1a11eda84bc462881263c500701f1e2
+        public static string? _app_key; //9a87922442c9486e9128d6c0c98779e3
+        public static string? _public_key; 
+        //MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlletxLWhxMpSxEGUk3CIpBV2cBnqWm+mKe1yF4ErEv9SoSdhDlOUqOQubOJVWAH274UP
+        //psxCKO+hM9Ftd+TulIu2iD/c9Z5mlbAB9uDleU0uXLS/rIp/rWLi6rcWZbwh4xwqqf3xAFK50g0fC24mYSK3vWjVrv8+WCLlQHiFewc6c8xPxQH9L
+        //DlU24CHoi4f5DwYRSdzcBAwk4+GFa7PKr4xteejv1t/tpjrzMuoAAJvqJFphP2XISZMBpUEaFvqfZwA7wL+1ChlVhhWNcWm8
         public static string? _notify_url;
         public static string? _receiver_name;
         public static string? _return_url;
@@ -24,7 +27,7 @@ namespace TeleBirr
         public static string? _nonce;
         public static string? _out_trade_no;
         public static string? _api = "http://196.188.120.3:10443/service-openup/toTradeWebPay";
-
+        public static string[] Ussd;
         public teleBirr(string app_id, string app_key, string public_key, string notify_url, string receiver_name, string return_url, string short_code, string subject, string timeout_express, string total_amount, string nonce, string out_trade_no,
             string api = "http://196.188.120.3:10443/service-openup/toTradeWebPay")
         {
@@ -41,55 +44,61 @@ namespace TeleBirr
             _total_amount = total_amount;
             _nonce = nonce;
             _out_trade_no = out_trade_no;
-            var ussd = new Dictionary<string, string>
-            {
-                {
-                    "appId",
-                    _app_id
-                },
-                {
-                    "notifyUrl",
-                    _notify_url
-                },
-                {
-                    "outTradeNo",
-                    _out_trade_no
-                },
-                {
-                    "receiverName",
-                    _receiver_name
-                },
-                {
-                    "returnUrl",
-                    _return_url
-                },
-                {
-                    "shortCode",
-                    _short_code
-                },
-                {
-                    "subject",
-                    _subject
-                },
-                {
-                    "timeoutExpress",
-                    _timeout_express
-                },
-                {
-                    "total_amount",
-                    _total_amount
-                },
-                {
-                    "nonce",
-                    _nonce
-                },
-                {
-                    "timestamp",
-                    Convert.ToInt32(DateTime.Now.Ticks * 1000).ToString()
-                }
-            };
+            Ussd();
         }
 
+        //public string Ussd()
+        //{
+        //    var ussd = new Dictionary<string, string>
+        //    {
+        //        {
+        //            "appId",
+        //            _app_id
+        //        },
+        //        {
+        //            "notifyUrl",
+        //            _notify_url
+        //        },
+        //        {
+        //            "outTradeNo",
+        //            _out_trade_no
+        //        },
+        //        {
+        //            "receiverName",
+        //            _receiver_name
+        //        },
+        //        {
+        //            "returnUrl",
+        //            _return_url
+        //        },
+        //        {
+        //            "shortCode",
+        //            _short_code
+        //        },
+        //        {
+        //            "subject",
+        //            _subject
+        //        },
+        //        {
+        //            "timeoutExpress",
+        //            _timeout_express
+        //        },
+        //        {
+        //            "total_amount",
+        //            _total_amount
+        //        },
+        //        {
+        //            "nonce",
+        //            _nonce
+        //        },
+        //        {
+        //            "timestamp",
+        //            Convert.ToInt32(DateTime.Now.Ticks * 1000).ToString()
+        //        }
+        //    };
+        //    return "";
+        //}
+        
         //Required Methods
         // Encrypt_Ussd(string, ussd, string public_key)
         // Encrypt(string public_key, string msg)
@@ -98,7 +107,26 @@ namespace TeleBirr
         // Send_Request()
         // Decrypt(string public_key, string payload)
 
+        public string Encrypt_Ussd(string ussd, string public_key)
+        {
 
+            return "";
+        }
 
+        public  string Encrypt(string public_key, string msg)
+        {
+            return "";
+        }
+
+        public string Sign(string ussd, string app_key)
+        {
+            return "";
+        }
+
+        public string Request_Params()
+        {
+            return "";
+
+        }
     }
 }
