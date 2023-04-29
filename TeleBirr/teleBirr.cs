@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -27,7 +28,7 @@ namespace TeleBirr
         public static string? _nonce;
         public static string? _out_trade_no;
         public static string? _api = "http://196.188.120.3:10443/service-openup/toTradeWebPay";
-        public static string[] Ussd;
+        
         public teleBirr(string app_id, string app_key, string public_key, string notify_url, string receiver_name, string return_url, string short_code, string subject, string timeout_express, string total_amount, string nonce, string out_trade_no,
             string api = "http://196.188.120.3:10443/service-openup/toTradeWebPay")
         {
@@ -44,61 +45,63 @@ namespace TeleBirr
             _total_amount = total_amount;
             _nonce = nonce;
             _out_trade_no = out_trade_no;
-            Ussd();
+           Dictionary<string,string> ussdPayload = Ussd();
+           var ussdResult = Encrypt_Ussd(ussdPayload, public_key);
+            
         }
 
-        //public string Ussd()
-        //{
-        //    var ussd = new Dictionary<string, string>
-        //    {
-        //        {
-        //            "appId",
-        //            _app_id
-        //        },
-        //        {
-        //            "notifyUrl",
-        //            _notify_url
-        //        },
-        //        {
-        //            "outTradeNo",
-        //            _out_trade_no
-        //        },
-        //        {
-        //            "receiverName",
-        //            _receiver_name
-        //        },
-        //        {
-        //            "returnUrl",
-        //            _return_url
-        //        },
-        //        {
-        //            "shortCode",
-        //            _short_code
-        //        },
-        //        {
-        //            "subject",
-        //            _subject
-        //        },
-        //        {
-        //            "timeoutExpress",
-        //            _timeout_express
-        //        },
-        //        {
-        //            "total_amount",
-        //            _total_amount
-        //        },
-        //        {
-        //            "nonce",
-        //            _nonce
-        //        },
-        //        {
-        //            "timestamp",
-        //            Convert.ToInt32(DateTime.Now.Ticks * 1000).ToString()
-        //        }
-        //    };
-        //    return "";
-        //}
-        
+        public Dictionary<string, string> Ussd()
+        {
+            var ussd = new Dictionary<string, string>
+            {
+                {
+                    "appId",
+                    _app_id
+                },
+                {
+                    "notifyUrl",
+                    _notify_url
+                },
+                {
+                    "outTradeNo",
+                    _out_trade_no
+                },
+                {
+                    "receiverName",
+                    _receiver_name
+                },
+                {
+                    "returnUrl",
+                    _return_url
+                },
+                {
+                    "shortCode",
+                    _short_code
+                },
+                {
+                    "subject",
+                    _subject
+                },
+                {
+                    "timeoutExpress",
+                    _timeout_express
+                },
+                {
+                    "total_amount",
+                    _total_amount
+                },
+                {
+                    "nonce",
+                    _nonce
+                },
+                {
+                    "timestamp",
+                    Convert.ToInt32(DateTime.Now.Ticks * 1000).ToString()
+                }
+            };
+            return ussd;
+        }
+
         //Required Methods
         // Encrypt_Ussd(string, ussd, string public_key)
         // Encrypt(string public_key, string msg)
@@ -107,21 +110,52 @@ namespace TeleBirr
         // Send_Request()
         // Decrypt(string public_key, string payload)
 
-        public string Encrypt_Ussd(string ussd, string public_key)
+        public string Encrypt_Ussd(Dictionary<string,string> ussd, string public_key)
         {
+            //Divide the public_key every 64 characters
+            var size = public_key.Length; //length of public key
+            var part = size / 64;
+            var loopSize = 64;
+            var start = 0;
+            string? formatted_Public_Key;
+            var t = part;
+            string result=null;
+            while (start < public_key.Length)
+            {
+                var temp = new string(public_key);
+                temp = temp.Substring(start, part - start)+"\n";
+                start = part;
+                part += t;
+                result = temp;
+            }
 
-            return "";
+            var r = "-----BEGIN CERTIFICATE-----" + "\n" + result + "\n" + "-----END CERTIFICATE-----";
+            var ussd_json = JsonConvert.SerializeObject(r);
+            // then encrypt the ussd_json
+            var encrypt = Encrypt(_public_key, ussd_json);
+
+            return encrypt;
         }
 
-        public  string Encrypt(string public_key, string msg)
+        public  string Encrypt(string? public_key, string msg)
         {
+            RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
+            RSA.ImportCspBlob(System.Convert.FromBase64CharArray(public_key));
+
+
+            var cipher = new PKCS1MaskGenerationMethod();
+            
+            
             return "";
         }
 
         public string Sign(string ussd, string app_key)
         {
+            var ussd_for_string_a = ussd;
+            
             return "";
         }
+         
 
         public string Request_Params()
         {
