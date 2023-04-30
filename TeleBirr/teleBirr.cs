@@ -132,21 +132,35 @@ namespace TeleBirr
             var r = "-----BEGIN CERTIFICATE-----" + "\n" + result + "\n" + "-----END CERTIFICATE-----";
             var ussd_json = JsonConvert.SerializeObject(r);
             // then encrypt the ussd_json
+            
             var encrypt = Encrypt(_public_key, ussd_json);
 
             return encrypt;
         }
 
-        public  string Encrypt(string? public_key, string msg)
-        {
+        public  string Encrypt(string public_key, string msg)
+        {    
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
-            RSA.ImportCspBlob(System.Convert.FromBase64CharArray(public_key));
+            RSA.ImportCspBlob(System.Convert.FromBase64String(public_key));
 
+            //var cipher = RSA.ToXmlString(true);
+            var cipherText = "b" + "";
 
-            var cipher = new PKCS1MaskGenerationMethod();
+            foreach (var i in Enumerable.Range(0, msg.Length / 117))
+            {
+                //convert the string to UTF8 Encoding
+                byte[] data = Encoding.UTF8.GetBytes(msg[i * 117].ToString());
+                //Encrypt the data and append to cipherText
+                cipherText += RSA.Encrypt(data,true);
+                
+                //cipherText += cipher.encrypt(msg[(i * 117):((i + 1) * 117)].encode("utf8"));
+            }
+            //cipherText += cipher.encrypt(msg[(((msg.Length)  /  117)  *  117) || (msg.Length)].encode("utf8"));
+            cipherText += RSA.Encrypt(msg[(msg.Length)  /  117)  *  117) : msg.Length].encode("utf8"));
+
+            cipherText = RSA.EncryptValue();
             
-            
-            return "";
+            return cipherText;
         }
 
         public string Sign(string ussd, string app_key)
