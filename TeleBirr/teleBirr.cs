@@ -1,5 +1,6 @@
 ﻿using System.Buffers.Text;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -115,9 +116,8 @@ namespace TeleBirr
             //Divide the public_key every 64 characters
             var size = public_key.Length; //length of public key
             var part = size / 64;
-            var loopSize = 64;
             var start = 0;
-            string? formatted_Public_Key;
+            //string? formatted_Public_Key;
             var t = part;
             string result=null;
             while (start < public_key.Length)
@@ -146,6 +146,33 @@ namespace TeleBirr
             //var cipher = RSA.ToXmlString(true);
             var cipherText = "b" + "";
 
+            //chunk the msg every 117 length and encrypt
+            // if there is any remaining string, encrypt the remaining strings
+
+            var st = msg.ToCharArray();
+            var floor = Math.Floor((decimal)(msg.Length/117));
+
+            foreach (var i in st)
+            {
+                
+                if (i == 0)
+                {
+                    byte[] data = Encoding.UTF8.GetBytes(msg[(i + 1) * 117].ToString());
+                    cipherText += RSA.Encrypt(data,true);
+                }
+                else
+                {
+                    byte[] data = Encoding.UTF8.GetBytes(msg[i * 117].ToString());
+                    cipherText += RSA.Encrypt(data,true);
+                }
+            }
+
+            var s = msg.Length % 117;
+            
+            cipherText += Encoding.UTF8.GetBytes((msg.Length/117) * 117 ? msg.Length);
+             
+
+
             foreach (var i in Enumerable.Range(0, msg.Length / 117))
             {
                 //convert the string to UTF8 Encoding
@@ -155,22 +182,21 @@ namespace TeleBirr
                 
                 //cipherText += cipher.encrypt(msg[(i * 117):((i + 1) * 117)].encode("utf8"));
             }
-            //cipherText += cipher.encrypt(msg[(((msg.Length)  /  117)  *  117) || (msg.Length)].encode("utf8"));
-            cipherText += RSA.Encrypt(msg[(msg.Length)  /  117)  *  117) : msg.Length].encode("utf8"));
+            
 
-            cipherText = RSA.EncryptValue();
+            //cipherText += cipher.encrypt(msg[(((msg.Length)  /  117)  *  117) || (msg.Length)].encode("utf8"));
+            //cipherText += RSA.Encrypt(msg[(msg.Length)  /  117)  *  117) : msg.Length].encode("utf8"));
+
+            //cipherText = RSA.EncryptValue(cipherT)
             
             return cipherText;
         }
 
-        public string Sign(string ussd, string app_key)
+        public string Sign(Dictionary<string,string> ussd, string app_key)
         {
-            var ussd_for_string_a = ussd;
-            
             return "";
         }
          
-
         public string Request_Params()
         {
             return "";
